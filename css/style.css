@@ -150,7 +150,7 @@ body{
 .play{
     width: 40px; 
     height: 40px;
-    fill: rgb(165, 4, 4);
+    fill: rgb(2, 169, 46);
     margin-top: 10px; 
     border-radius: 50%;
     position: absolute;
@@ -240,7 +240,8 @@ body{
 
 .card img{
     width: 100%;
-    object-fit: contain;
+    height: 150px;
+    object-fit:cover;
 }
 
 .card:hover{

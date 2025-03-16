@@ -1,4 +1,4 @@
-console.log('Lets write JavaScript');
+// console.log('Lets write JavaScript');
 let currentsong = new Audio()
 let songs
 let currFolder
@@ -15,48 +15,55 @@ function secondsToMinutesSeconds (seconds) {
 
 
 
-async function getSongs(folder){
-    currFolder = folder
-    let a = await fetch(`/${folder}/`)
-    let response = await a.text();
-    let div = document.createElement("div")
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a")
-    songs = []
-    for (let index = 0; index < as.length; index++) {
-
-    const element = as [index];
-    if(element.href.endsWith(".mp3")){
-        songs.push(element.href.split(`/${folder}/`)[1])
+    async function getSongs(folder) {
+        currFolder = folder
+        let a = await fetch(`/${folder}/`)
+        let response = await a.text()
+        let div = document.createElement("div")
+        div.innerHTML = response
+        let as = div.getElementsByTagName("a")
+        songs = []
+    
+        for (let index = 0; index < as.length; index++) {
+            const element = as[index]
+            if (element.href.endsWith(".mp3")) {
+                const parts = element.href.split(`/${folder}/`)
+                if (parts.length > 1) {
+                    songs.push(parts[1])
+                }
+            }
         }
-    }
-
-    let songUL = document.querySelector(".songlist").getElementsByTagName("ul")[0]
-    songUL.innerHTML = ""
-    for(const song of songs) {
-        songUL.innerHTML = songUL.innerHTML + `<li>  
-                            <img class="invert" width="30px" src="img/music.svg" alt="">
-                                <div class="info">
-                                    <div>${song.replaceAll("%20", " ")}</div>
-                                    <div>NXT</div>
-                                </div>
-                            <div>
-                                <div class="playnow">
-                                    <span>Play</span>
-                                    <img class="invert" width="30px" src="img/play.svg" alt="">
-                                </div>
-                            </div>
-                         </li>`
-    }
-    Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e=>{
-        e.addEventListener("click", element=>{
-            // console.log(e.querySelector(".info").firstElementChild.innerHTML)
-            playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
+    
+        let songUL = document.querySelector(".songlist").getElementsByTagName("ul")[0]
+        songUL.innerHTML = ""
+        for (const song of songs) {
+            if (song) {  // Ensure song is not undefined
+                songUL.innerHTML += `<li>  
+                    <img class="invert" width="30px" src="img/music.svg" alt="">
+                    <div class="info">
+                        <div>${song.replace(/%20/g, " ")}</div>
+                        <div>NXT</div>
+                    </div>
+                    <div>
+                        <div class="playnow">
+                            <span>Play</span>
+                            <img class="invert" width="30px" src="img/play.svg" alt="">
+                        </div>
+                    </div>
+                </li>`
+            }
+        }
+    
+        // Add event listener to each song item
+        Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e => {
+            e.addEventListener("click", element => {
+                playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
+            })
         })
-    }) 
-
-    return songs
-}
+    
+        return songs
+    }
+    
 
 const playMusic = (track, pause=false)=> {
     currentsong.src  = `/${currFolder}/`+track
